@@ -1,52 +1,33 @@
 ﻿using System;
 using System.Linq;
-using static Aoc2020.Toolbox;
+using static Aoc2020.Bag;
 
 namespace Aoc2020
 {
     internal static class Day2
     {
+        private record Row (char Letter, int Pos1, int Pos2, string Password);
+
         public static int Run1()
         {
-            var input = ParseInput<string>(Input);
-            int validPasswords = 0;
-            foreach (var row in input)
+            static bool IsValid(Row r)
             {
-                var (password, letter, min, max) = Parse(row);
-
-                int letterCount = password.Count(x => x == letter);
-                bool isValid = min <= letterCount && letterCount <= max;
-                if (isValid)
-                {
-                    validPasswords++;
-                }
-
-                Console.WriteLine($"{min}-{max} {letter}: {password} {letterCount} {isValid} {validPasswords}");
-                Console.WriteLine(row);
+                int letterCount = r.Password.Count(x => x == r.Letter);
+                return r.Pos1 <= letterCount && letterCount <= r.Pos2;
             }
-
-            return validPasswords;
+            return ParseInput<string>(Input)
+                .Select(ParseRow)
+                .Count(IsValid);
         }
 
         public static long Run2()
         {
-            var input = ParseInput<string>(Input);
-            int validPasswords = 0;
-            foreach (var row in input)
-            {
-                var (password, letter, pos1, pos2) = Parse(row);
-                bool isValid = password[pos1 - 1] == letter ^ password[pos2 - 1] == letter;
-                if (isValid)
-                {
-                    validPasswords++;
-                }
-
-            }
-
-            return validPasswords;
+            return ParseInput<string>(Input)
+                .Select(ParseRow)
+                .Count(r => r.Password[r.Pos1 - 1] == r.Letter ^ r.Password[r.Pos2 - 1] == r.Letter);
         }
 
-        private static (string password, char letter, int pos1, int pos2) Parse(string row)
+        private static Row ParseRow(string row)
         {
             string[] policyAndPass = row.Split(':');
             string[] policy = policyAndPass[0].Split(" ");
@@ -54,9 +35,9 @@ namespace Aoc2020
 
             char letter = policy[1][0];
             string[] range = policy[0].Split('-', StringSplitOptions.RemoveEmptyEntries);
-            int min = Int32.Parse(range[0]);
-            int max = Int32.Parse(range[1]);
-            return (password, letter, min, max);
+            int pos1 = Int32.Parse(range[0]);
+            int pos2 = Int32.Parse(range[1]);
+            return new Row(letter, pos1, pos2, password);
         }
 
 

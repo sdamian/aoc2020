@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.Diagnostics;
+using Aoc2020;
 
-namespace Aoc2020
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine(Day2.Run1());
-            Console.WriteLine(Day2.Run2());
-        }
-    }
-}
+var watch = Stopwatch.StartNew();
+Console.WriteLine(Day3.Run2());
+watch.Stop();
+Console.WriteLine(watch.Elapsed);
+
+

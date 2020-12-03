@@ -7,14 +7,10 @@ namespace Aoc2020
     {
         public static int Run1()
         {
-            var items = Input
-                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-                .Select(Int32.Parse)
-                .ToArray();
-
-            foreach (var i in items)
+            int[] items = Bag.ParseInput<int>(Input);
+            foreach (int i in items)
             {
-                foreach (var j in items)
+                foreach (int j in items)
                 {
                     if (i + j == 2020)
                     {
@@ -28,25 +24,14 @@ namespace Aoc2020
 
         public static long Run2()
         {
-            var items = Toolbox.ParseInput<int>(Input);
-
-            foreach (var i in items)
-            {
-                foreach (var j in items)
-                {
-                    foreach (var k in items)
-                    {
-                        if (i + j + k == 2020)
-                        {
-                            return i * j * k;
-                        }
-                    }
-                }
-            }
-
-            return 0;
+            int[] items = Bag.ParseInput<int>(Input);
+            return (
+                from i in items 
+                from j in items 
+                from k in items 
+                where i + j + k == 2020 
+                select i * j * k).FirstOrDefault();
         }
-
 
         private const string Input = @"
 1918
